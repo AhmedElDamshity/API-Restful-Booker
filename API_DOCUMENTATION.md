@@ -6,66 +6,67 @@ This document provides full technical documentation for the publicly available *
 
 ## 🔐 Authentication
 
-**POST** `/auth` — Create Auth Token  
+### ✅ POST `/auth` – Create Auth Token
+
 Creates a new authentication token to be used with secured endpoints like PUT, PATCH, and DELETE.
 
 - **URL**: `https://restful-booker.herokuapp.com/auth`
 - **Headers**:
   - `Content-Type: application/json`
 - **Request Body**:
+
 ```json
 {
   "username": "admin",
   "password": "password123"
 }
-Success Response:
+```
 
-json
-Copy
-Edit
+- **Success Response (200 OK)**:
+
+```json
 {
   "token": "abc123"
 }
-📋 Booking Endpoints
-GET /booking — Get Booking IDs
+```
+
+---
+
+## 📋 Booking Endpoints
+
+---
+
+### 📄 GET `/booking` – Get Booking IDs
+
 Returns all booking IDs. Supports optional filters.
 
-URL: https://restful-booker.herokuapp.com/booking
+- **URL**: `https://restful-booker.herokuapp.com/booking`
+- **Optional Query Parameters**:
+  - `firstname`: string
+  - `lastname`: string
+  - `checkin`: date (YYYY-MM-DD)
+  - `checkout`: date (YYYY-MM-DD)
+- **Success Response (200 OK)**:
 
-Optional Query Parameters:
-
-firstname: string
-
-lastname: string
-
-checkin: date (YYYY-MM-DD)
-
-checkout: date (YYYY-MM-DD)
-
-Success Response:
-
-json
-Copy
-Edit
+```json
 [
   { "bookingid": 1 },
-  { "bookingid": 2 },
-  { "bookingid": 3 }
+  { "bookingid": 2 }
 ]
-GET /booking/:id — Get Booking by ID
-Returns the booking details for a given ID.
+```
 
-URL Example: https://restful-booker.herokuapp.com/booking/1
+---
 
-Headers:
+### 📄 GET `/booking/:id` – Get Booking by ID
 
-Accept: application/json
+Returns booking details for a specific booking ID.
 
-Success Response:
+- **URL Example**: `https://restful-booker.herokuapp.com/booking/1`
+- **Headers**:
+  - `Accept: application/json`
+- **Success Response (200 OK)**:
 
-json
-Copy
-Edit
+```json
 {
   "firstname": "Sally",
   "lastname": "Brown",
@@ -77,22 +78,21 @@ Edit
   },
   "additionalneeds": "Breakfast"
 }
-POST /booking — Create Booking
-Creates a new booking.
+```
 
-URL: https://restful-booker.herokuapp.com/booking
+---
 
-Headers:
+### 📝 POST `/booking` – Create New Booking
 
-Content-Type: application/json
+Creates a new booking record.
 
-Accept: application/json
+- **URL**: `https://restful-booker.herokuapp.com/booking`
+- **Headers**:
+  - `Content-Type: application/json`
+  - `Accept: application/json`
+- **Request Body**:
 
-Request Body:
-
-json
-Copy
-Edit
+```json
 {
   "firstname": "Jim",
   "lastname": "Brown",
@@ -104,11 +104,11 @@ Edit
   },
   "additionalneeds": "Breakfast"
 }
-Success Response:
+```
 
-json
-Copy
-Edit
+- **Success Response (200 OK)**:
+
+```json
 {
   "bookingid": 1,
   "booking": {
@@ -123,24 +123,22 @@ Edit
     "additionalneeds": "Breakfast"
   }
 }
-PUT /booking/:id — Update Entire Booking
+```
+
+---
+
+### ✏️ PUT `/booking/:id` – Update Entire Booking
+
 Fully updates an existing booking.
 
-URL: https://restful-booker.herokuapp.com/booking/1
+- **URL**: `https://restful-booker.herokuapp.com/booking/1`
+- **Headers**:
+  - `Content-Type: application/json`
+  - `Accept: application/json`
+  - `Cookie: token=abc123`
+- **Request Body**:
 
-Headers:
-
-Content-Type: application/json
-
-Accept: application/json
-
-Cookie: token=abc123
-
-Request Body:
-
-json
-Copy
-Edit
+```json
 {
   "firstname": "James",
   "lastname": "Brown",
@@ -152,73 +150,77 @@ Edit
   },
   "additionalneeds": "Breakfast"
 }
-Success Response: Same structure as request.
+```
 
-PATCH /booking/:id — Partial Update Booking
-Partially updates a booking (e.g., just firstname).
+- **Success Response (200 OK)**: Same structure as above.
 
-URL: https://restful-booker.herokuapp.com/booking/1
+---
 
-Headers:
+### ✏️ PATCH `/booking/:id` – Partial Update Booking
 
-Content-Type: application/json
+Updates only specified fields of a booking.
 
-Cookie: token=abc123
+- **URL**: `https://restful-booker.herokuapp.com/booking/1`
+- **Headers**:
+  - `Content-Type: application/json`
+  - `Cookie: token=abc123`
+- **Example Request Body**:
 
-Example Request Body:
-
-json
-Copy
-Edit
+```json
 {
   "firstname": "James"
 }
-Success Response: Returns updated booking with modified fields.
+```
 
-DELETE /booking/:id — Delete Booking
-Deletes a booking. Requires authorization.
+- **Success Response (200 OK)**: Returns the updated fields in the booking.
 
-URL: https://restful-booker.herokuapp.com/booking/1
+---
 
-Headers (one of the following):
+### ❌ DELETE `/booking/:id` – Delete Booking
 
-Cookie: token=abc123
+Deletes a booking using token or basic auth.
 
-Authorization: Basic YWRtaW46cGFzc3dvcmQxMjM=
+- **URL**: `https://restful-booker.herokuapp.com/booking/1`
+- **Headers (one of the following)**:
+  - `Cookie: token=abc123`
+  - `Authorization: Basic YWRtaW46cGFzc3dvcmQxMjM=`
 
-Success Response:
+- **Success Response**:
 
-h
-Copy
-Edit
+```http
 HTTP/1.1 201 Created
-🛡️ Authorization Methods
-You must provide a valid token or Basic Auth to access secure endpoints (PUT, PATCH, DELETE).
+```
 
-Basic Auth Header (Base64 encoded):
+---
 
-makefile
-Copy
-Edit
-Authorization: Basic YWRtaW46cGFzc3dvcmQxMjM=
-Cookie Header:
+## 🔐 Auth Methods
 
-makefile
-Copy
-Edit
-Cookie: token=abc123
-🗓️ Date Format
-All date fields such as checkin and checkout follow the ISO format:
+| Header Type     | Description                                       |
+|------------------|---------------------------------------------------|
+| Cookie           | `token=abc123` used in PUT, PATCH, DELETE         |
+| Authorization    | Basic auth: `admin:password123` (Base64 encoded)  |
 
-css
-Copy
-Edit
+---
+
+## 📆 Date Format
+
+All dates must be in the ISO format:
+
+```
 YYYY-MM-DD
-🔗 Base URL
-arduino
-Copy
-Edit
+```
+
+---
+
+## 🌐 Base URL
+
+```
 https://restful-booker.herokuapp.com
-👨‍💻 Maintainer
-Ahmed ElDamshity
+```
+
+---
+
+## 👨‍💻 Maintainer
+
+**Ahmed ElDamshity**  
 📧 ahmed.eldamshity25@gmail.com
