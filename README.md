@@ -79,6 +79,6 @@ newman run "collection/API restful-booker.postman_collection.json" \
 
 🧑‍💻 Author
 Ahmed ElDamshity
-🔗 GitHub — 📧 ahmed.eldamshity25@gmai.com
+📧 ahmed.eldamshity25@gmai.com
 
 
